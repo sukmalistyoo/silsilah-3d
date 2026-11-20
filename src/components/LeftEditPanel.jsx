@@ -22,7 +22,6 @@ function displayName(p) {
 }
 
 export default function LeftEditPanel({
-  treeTitle,
   viewMode,
   onChangeViewMode,
   peopleCount,
@@ -49,22 +48,27 @@ export default function LeftEditPanel({
       <div className="s3d-sidebar-head">
         <div className="s3d-brand">
           <span className="s3d-brand-mark">
-            <Box size={18} />
+            <Box size={16} />
           </span>
           <div>
             <h1>Silsilah 3D</h1>
-            <p>{peopleCount} tokoh · Data Demo Fiktif</p>
+            <p>{peopleCount} tokoh</p>
           </div>
         </div>
-        <button type="button" className="s3d-icon-btn" onClick={onCollapse} title="Sembunyikan panel edit" aria-label="Sembunyikan panel edit">
-          <ChevronLeft size={18} />
+        <button
+          type="button"
+          className="s3d-icon-btn"
+          onClick={onCollapse}
+          title="Sembunyikan panel"
+          aria-label="Sembunyikan panel"
+        >
+          <ChevronLeft size={16} />
         </button>
       </div>
 
       <div className="s3d-sidebar-scroll">
         {/* Mode Switcher 3D / 2D */}
         <section className="s3d-section">
-          <span className="s3d-section-label">Mode Kanvas</span>
           <div className="s3d-segmented" role="tablist" aria-label="Pilih mode tampilan">
             <button
               type="button"
@@ -74,7 +78,7 @@ export default function LeftEditPanel({
               onClick={() => onChangeViewMode('3d')}
             >
               <Box size={14} />
-              <span>Tampilan 3D</span>
+              <span>3D</span>
             </button>
             <button
               type="button"
@@ -84,44 +88,40 @@ export default function LeftEditPanel({
               onClick={() => onChangeViewMode('2d')}
             >
               <Layers size={14} />
-              <span>Tampilan 2D</span>
+              <span>2D</span>
             </button>
           </div>
         </section>
 
         {/* Cinematic MP4 Banner Download */}
         <section className="s3d-section">
-          <span className="s3d-section-label">Banner Video Cinematik</span>
           <button
             type="button"
             className={`s3d-record-btn ${recording ? 'is-recording' : ''}`}
             onClick={onToggleRecordBanner}
-            title={viewMode !== '3d' ? 'Otomatis beralih ke mode 3D dan merekam banner video HD' : 'Rekam & unduh banner video MP4 16:9 HD'}
+            title="Rekam & unduh banner video HD 16:9"
           >
             {recording ? (
               <>
                 <span className="s3d-rec-dot" aria-hidden="true" />
-                <Square size={13} />
-                <span>Merekam 0:{String(recordingSec).padStart(2, '0')} · Stop &amp; Unduh</span>
+                <Square size={12} />
+                <span>0:{String(recordingSec).padStart(2, '0')} · Stop</span>
               </>
             ) : (
               <>
-                <Film size={15} />
-                <span>Download Video Banner MP4</span>
+                <Film size={14} />
+                <span>Video Banner MP4</span>
               </>
             )}
           </button>
-          <p className="s3d-helper-note">
-            Otomatis memutar kamera 3D sinematik (1280×720 HD) untuk {treeTitle} dan langsung mengunduh file video.
-          </p>
         </section>
 
         {/* Selected Person Inspector & Edit Actions */}
         <section className="s3d-section">
           <div className="s3d-section-row">
-            <span className="s3d-section-label">Editor Tokoh</span>
+            <span className="s3d-section-label">Tokoh</span>
             <button type="button" className="s3d-mini-add" onClick={onAddRoot}>
-              <Plus size={13} />
+              <Plus size={12} />
               <span>Baru</span>
             </button>
           </div>
@@ -140,7 +140,7 @@ export default function LeftEditPanel({
                     {[
                       selectedPerson.data?.gelar,
                       selectedPerson.data?.birthday
-                        ? `${selectedPerson.data.birthday}${selectedPerson.data?.death ? ` – ${selectedPerson.data.death}` : ''}`
+                        ? `${selectedPerson.data.birthday}${selectedPerson.data?.death ? `–${selectedPerson.data.death}` : ''}`
                         : '',
                     ]
                       .filter(Boolean)
@@ -152,34 +152,34 @@ export default function LeftEditPanel({
 
               <div className="s3d-action-grid">
                 <button type="button" className="s3d-act-btn" onClick={onEditSelected}>
-                  <Edit3 size={14} />
-                  <span>Edit Data</span>
+                  <Edit3 size={13} />
+                  <span>Edit</span>
                 </button>
                 <button type="button" className="s3d-act-btn is-accent" onClick={() => onAddRelation('child')}>
-                  <UserPlus size={14} />
+                  <UserPlus size={13} />
                   <span>+ Anak</span>
                 </button>
                 <button type="button" className="s3d-act-btn" onClick={() => onAddRelation('spouse')}>
-                  <Heart size={14} />
+                  <Heart size={13} />
                   <span>+ Pasangan</span>
                 </button>
                 <button type="button" className="s3d-act-btn" onClick={() => onAddRelation('parent')}>
-                  <Users size={14} />
+                  <Users size={13} />
                   <span>+ Orang Tua</span>
                 </button>
               </div>
 
               <button type="button" className="s3d-delete-btn" onClick={onDeleteSelected}>
-                <Trash2 size={14} />
-                <span>Hapus Tokoh Ini</span>
+                <Trash2 size={13} />
+                <span>Hapus</span>
               </button>
             </div>
           ) : (
             <div className="s3d-empty-inspector">
-              <p>Klik salah satu kartu tokoh di kanvas untuk mengedit data atau menambah anak, pasangan, dan orang tua.</p>
+              <p>Pilih tokoh di kanvas untuk edit atau tambah relasi.</p>
               <button type="button" className="s3d-btn-primary s3d-full" onClick={onAddRoot}>
-                <UserPlus size={15} />
-                <span>Tambah Tokoh Baru</span>
+                <UserPlus size={14} />
+                <span>Tambah Tokoh</span>
               </button>
             </div>
           )}
@@ -194,8 +194,8 @@ export default function LeftEditPanel({
             onClick={() => setStyleOpen((v) => !v)}
           >
             <span className="s3d-collapse-title">
-              <Palette size={14} />
-              <span>Gaya Bingkai &amp; Garis</span>
+              <Palette size={13} />
+              <span>Gaya Bagan</span>
             </span>
             <span>{styleOpen ? '−' : '+'}</span>
           </button>
@@ -203,15 +203,15 @@ export default function LeftEditPanel({
           {styleOpen && (
             <div className="s3d-style-box">
               <label>
-                <span>Bentuk Bingkai 3D</span>
+                <span>Bentuk Bingkai</span>
                 <select
                   value={appearance.portraitShape || 'rounded'}
                   onChange={(e) => onChangeAppearance({ ...appearance, portraitShape: e.target.value })}
                 >
-                  <option value="rounded">Kotak Membulat</option>
+                  <option value="rounded">Membulat</option>
                   <option value="circle">Lingkaran</option>
-                  <option value="arch">Kubah / Arch</option>
-                  <option value="square">Kotak Tegas</option>
+                  <option value="arch">Kubah</option>
+                  <option value="square">Kotak</option>
                 </select>
               </label>
               <label>
@@ -241,15 +241,15 @@ export default function LeftEditPanel({
           }}
         />
         <button type="button" className="s3d-foot-btn" onClick={() => fileRef.current?.click()} title="Import JSON">
-          <Upload size={14} />
+          <Upload size={13} />
           <span>Import</span>
         </button>
         <button type="button" className="s3d-foot-btn" onClick={onExportJson} title="Export JSON">
-          <Download size={14} />
+          <Download size={13} />
           <span>Export</span>
         </button>
-        <button type="button" className="s3d-foot-btn" onClick={onResetDemo} title="Reset ke data awal">
-          <RotateCcw size={14} />
+        <button type="button" className="s3d-foot-btn" onClick={onResetDemo} title="Reset demo">
+          <RotateCcw size={13} />
           <span>Reset</span>
         </button>
       </div>
