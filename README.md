@@ -11,11 +11,11 @@ Aplikasi web interaktif untuk memvisualisasikan dan menyunting bagan silsilah ke
   - **Jalur Rel Bersudut Halus (*Rounded Bus-Bar*):** Garis penghubung tegak-lurus rapi yang turun melalui celah antarkartu (bebas garis tumpang tindih).
 - **Kaligrafi Arab & Penyorotan Khusus:** Mendukung tampilan nama Arab di dalam bingkai potret 3D/2D.
 - **Interaksi Lengkap:** Cari tokoh, cek hubungan kekerabatan, *Play Sorot Leluhur* (animasi kamera 3D), *Mode Haul*, dan ekspor poster PNG.
+- **Download Banner Video MP4 Cinematik:** Rekam otomatis animasi kamera 3D sinematik (1280×720 HD 16:9 lengkap *letterbox* & judul emas) langsung dari browser tanpa server.
 - **Tanpa Backend (100% Statis):** Perubahan demo tersimpan otomatis di `localStorage` browser serta mendukung **Import / Export JSON**.
 
 ## Dataset Demo Bawaan
-1. **Contoh Trah Keluarga** (5 generasi, 34 tokoh fiktif)
-2. **Silsilah Nabi Muhammad SAW** (60 tokoh dari Nabi Adam AS hingga Al-Hasan & Al-Husain RA)
+- **Contoh Trah Keluarga Wira Kusuma** (5 generasi, 34 tokoh fiktif — aman untuk demo publik).
 
 ## Menjalankan Secara Lokal
 ```bash

@@ -4,11 +4,13 @@ import {
   ChevronLeft,
   Download,
   Edit3,
+  Film,
   Heart,
   Layers,
   Palette,
   Plus,
   RotateCcw,
+  Square,
   Trash2,
   Upload,
   UserPlus,
@@ -20,9 +22,7 @@ function displayName(p) {
 }
 
 export default function LeftEditPanel({
-  datasets,
-  activeDatasetId,
-  onSelectDataset,
+  treeTitle,
   viewMode,
   onChangeViewMode,
   peopleCount,
@@ -37,6 +37,9 @@ export default function LeftEditPanel({
   onImportJson,
   onResetDemo,
   onCollapse,
+  recording,
+  recordingSec,
+  onToggleRecordBanner,
 }) {
   const [styleOpen, setStyleOpen] = useState(false);
   const fileRef = useRef(null);
@@ -50,7 +53,7 @@ export default function LeftEditPanel({
           </span>
           <div>
             <h1>Silsilah 3D</h1>
-            <p>{peopleCount} tokoh · Interaktif 3D &amp; 2D</p>
+            <p>{peopleCount} tokoh · Data Demo Fiktif</p>
           </div>
         </div>
         <button type="button" className="s3d-icon-btn" onClick={onCollapse} title="Sembunyikan panel edit" aria-label="Sembunyikan panel edit">
@@ -86,22 +89,31 @@ export default function LeftEditPanel({
           </div>
         </section>
 
-        {/* Dataset Switcher */}
+        {/* Cinematic MP4 Banner Download */}
         <section className="s3d-section">
-          <span className="s3d-section-label">Demo Silsilah</span>
-          <div className="s3d-dataset-list">
-            {datasets.map((ds) => (
-              <button
-                key={ds.id}
-                type="button"
-                className={`s3d-dataset-btn ${activeDatasetId === ds.id ? 'is-active' : ''}`}
-                onClick={() => onSelectDataset(ds.id)}
-              >
-                <span>{ds.label}</span>
-                <small>{ds.people.length} tokoh</small>
-              </button>
-            ))}
-          </div>
+          <span className="s3d-section-label">Banner Video Cinematik</span>
+          <button
+            type="button"
+            className={`s3d-record-btn ${recording ? 'is-recording' : ''}`}
+            onClick={onToggleRecordBanner}
+            title={viewMode !== '3d' ? 'Otomatis beralih ke mode 3D dan merekam banner video HD' : 'Rekam & unduh banner video MP4 16:9 HD'}
+          >
+            {recording ? (
+              <>
+                <span className="s3d-rec-dot" aria-hidden="true" />
+                <Square size={13} />
+                <span>Merekam 0:{String(recordingSec).padStart(2, '0')} · Stop &amp; Unduh</span>
+              </>
+            ) : (
+              <>
+                <Film size={15} />
+                <span>Download Video Banner MP4</span>
+              </>
+            )}
+          </button>
+          <p className="s3d-helper-note">
+            Otomatis memutar kamera 3D sinematik (1280×720 HD) untuk {treeTitle} dan langsung mengunduh file video.
+          </p>
         </section>
 
         {/* Selected Person Inspector & Edit Actions */}

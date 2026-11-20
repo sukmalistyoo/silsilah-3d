@@ -1,27 +1,17 @@
-import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
 import { PanelLeftOpen } from 'lucide-react';
 import FamilyTree3DBoundary from './family-tree/FamilyTree3DBoundary';
 import { familyPositions } from './family-tree/layout2D';
 import { cleanAppearance, cleanStyle } from './family-tree/ChartStylePanel';
 import { DEMO_TRAH_DATA } from './data/demoTrahData';
-import { SILSILAH_NABI_DATA } from './data/silsilahNabiData';
+import { startCinematicBannerRecording } from './utils/cinematicRecorder';
 import LeftEditPanel from './components/LeftEditPanel';
 import FamilyTree2D from './components/FamilyTree2D';
 import PersonModal from './components/PersonModal';
 
 const FamilyTree3D = lazy(() => import('./family-tree/FamilyTree3D'));
 
-const DATASETS = [
-  DEMO_TRAH_DATA,
-  {
-    id: 'nabi-muhammad',
-    label: 'Silsilah Nabi Muhammad SAW',
-    title: 'Silsilah Nabi Muhammad SAW',
-    ...SILSILAH_NABI_DATA,
-  },
-];
-
-const STORAGE_PREFIX = 'silsilah3d_demo_v1_';
+const STORAGE_KEY = 'silsilah3d_demo_trah_v1';
 
 const cleanPerson = (p) => ({
   ...p,
@@ -34,68 +24,99 @@ const cleanPerson = (p) => ({
   },
 });
 
-function loadDatasetState(ds) {
+function loadInitialState() {
   try {
-    const raw = localStorage.getItem(STORAGE_PREFIX + ds.id);
+    const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed.people) && parsed.people.length) {
         return {
           people: parsed.people.map(cleanPerson),
-          appearance: cleanAppearance(parsed.appearance || ds.appearance || {}),
+          appearance: cleanAppearance(parsed.appearance || DEMO_TRAH_DATA.appearance || {}),
         };
       }
     }
   } catch {
-    // Fallback to default dataset
+    // Fallback to default demo data
   }
   return {
-    people: (ds.people || []).map(cleanPerson),
-    appearance: cleanAppearance(ds.appearance || {}),
+    people: (DEMO_TRAH_DATA.people || []).map(cleanPerson),
+    appearance: cleanAppearance(DEMO_TRAH_DATA.appearance || {}),
   };
 }
 
 export default function App() {
-  const [activeDatasetId, setActiveDatasetId] = useState(DATASETS[0].id);
-  const activeDataset = useMemo(
-    () => DATASETS.find((d) => d.id === activeDatasetId) || DATASETS[0],
-    [activeDatasetId],
-  );
-
-  const [people, setPeople] = useState(() => loadDatasetState(DATASETS[0]).people);
-  const [appearance, setAppearance] = useState(() => loadDatasetState(DATASETS[0]).appearance);
+  const [people, setPeople] = useState(() => loadInitialState().people);
+  const [appearance, setAppearance] = useState(() => loadInitialState().appearance);
   const [viewMode, setViewMode] = useState('3d');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selected, setSelected] = useState(null);
   const [cameraReset, setCameraReset] = useState(0);
   const [modal, setModal] = useState({ open: false, mode: 'add', relation: null });
+  const [recording, setRecording] = useState(false);
+  const [recordingSec, setRecordingSec] = useState(10);
+  const stopRecorderRef = useRef(null);
+  const stageRef = useRef(null);
 
-  // Persist edits per dataset in localStorage
   useEffect(() => {
     try {
-      localStorage.setItem(
-        STORAGE_PREFIX + activeDatasetId,
-        JSON.stringify({ people, appearance }),
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ people, appearance }));
     } catch {
       // Ignore storage quota errors
     }
-  }, [activeDatasetId, people, appearance]);
+  }, [people, appearance]);
 
-  const switchDataset = (id) => {
-    const next = DATASETS.find((d) => d.id === id);
-    if (!next) return;
-    const loaded = loadDatasetState(next);
-    setActiveDatasetId(id);
-    setPeople(loaded.people);
-    setAppearance(loaded.appearance);
-    setSelected(null);
-    setCameraReset((v) => v + 1);
-  };
+  useEffect(() => () => stopRecorderRef.current?.(), []);
 
   const peopleById = useMemo(() => new Map(people.map((p) => [p.id, p])), [people]);
   const selectedPerson = selected ? peopleById.get(selected) || null : null;
   const positions = useMemo(() => familyPositions(people, 'portrait', 1), [people]);
+
+  const handleToggleRecordBanner = () => {
+    if (recording) {
+      stopRecorderRef.current?.();
+      stopRecorderRef.current = null;
+      return;
+    }
+
+    const begin = () => {
+      const canvas = stageRef.current?.querySelector('canvas');
+      if (!canvas) {
+        window.alert('Kanvas 3D belum siap. Tunggu sebentar lalu coba lagi.');
+        return;
+      }
+      // Trigger the built-in cinematic camera tour ("Play Sorot Leluhur") so the banner animates smoothly!
+      const playBtn = stageRef.current?.querySelector('.dgft3d-tour-pill button');
+      if (playBtn && !playBtn.classList.contains('is-active')) {
+        playBtn.click();
+      }
+      setRecording(true);
+      setRecordingSec(10);
+      stopRecorderRef.current = startCinematicBannerRecording({
+        sourceCanvas: canvas,
+        title: DEMO_TRAH_DATA.title,
+        subtitle: 'SILSILAH 3D · BANNER CINEMATIK',
+        durationMs: 10000,
+        onTick: (sec) => setRecordingSec(sec),
+        onComplete: () => {
+          setRecording(false);
+          stopRecorderRef.current = null;
+        },
+        onError: (msg) => {
+          setRecording(false);
+          stopRecorderRef.current = null;
+          window.alert(msg);
+        },
+      });
+    };
+
+    if (viewMode !== '3d') {
+      setViewMode('3d');
+      setTimeout(begin, 750);
+    } else {
+      begin();
+    }
+  };
 
   const handleSavePerson = (data) => {
     if (modal.mode === 'edit' && selectedPerson) {
@@ -151,13 +172,13 @@ export default function App() {
 
   const handleExportJson = () => {
     const blob = new Blob(
-      [JSON.stringify({ title: activeDataset.title, appearance, people }, null, 2)],
+      [JSON.stringify({ title: DEMO_TRAH_DATA.title, appearance, people }, null, 2)],
       { type: 'application/json' },
     );
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${activeDatasetId}-silsilah.json`;
+    a.download = 'silsilah-3d-data.json';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -178,9 +199,9 @@ export default function App() {
   };
 
   const handleResetDemo = () => {
-    localStorage.removeItem(STORAGE_PREFIX + activeDatasetId);
-    setPeople((activeDataset.people || []).map(cleanPerson));
-    setAppearance(cleanAppearance(activeDataset.appearance || {}));
+    localStorage.removeItem(STORAGE_KEY);
+    setPeople((DEMO_TRAH_DATA.people || []).map(cleanPerson));
+    setAppearance(cleanAppearance(DEMO_TRAH_DATA.appearance || {}));
     setSelected(null);
     setCameraReset((v) => v + 1);
   };
@@ -191,9 +212,7 @@ export default function App() {
     <div className={`s3d-workspace ${sidebarOpen ? 'is-sidebar-open' : 'is-sidebar-closed'}`}>
       {sidebarOpen && (
         <LeftEditPanel
-          datasets={DATASETS}
-          activeDatasetId={activeDatasetId}
-          onSelectDataset={switchDataset}
+          treeTitle={DEMO_TRAH_DATA.title}
           viewMode={viewMode}
           onChangeViewMode={setViewMode}
           peopleCount={people.length}
@@ -208,10 +227,13 @@ export default function App() {
           onImportJson={handleImportJson}
           onResetDemo={handleResetDemo}
           onCollapse={() => setSidebarOpen(false)}
+          recording={recording}
+          recordingSec={recordingSec}
+          onToggleRecordBanner={handleToggleRecordBanner}
         />
       )}
 
-      <main className="s3d-stage" aria-label="Kanvas Silsilah">
+      <main ref={stageRef} className="s3d-stage" aria-label="Kanvas Silsilah">
         {!sidebarOpen && (
           <button
             type="button"
@@ -228,7 +250,6 @@ export default function App() {
           <FamilyTree3DBoundary>
             <Suspense fallback={<div className="s3d-loading">Memuat ruang 3D…</div>}>
               <FamilyTree3D
-                key={activeDatasetId}
                 people={people}
                 positions={positions}
                 generationPositions={positions}
@@ -236,8 +257,7 @@ export default function App() {
                 onSelect={setSelected}
                 appearance={appearance}
                 reset={cameraReset}
-                initialFrameIds={activeDataset.defaultFrameIds || null}
-                initialOverview={Boolean(activeDataset.defaultOverview)}
+                initialOverview={Boolean(DEMO_TRAH_DATA.defaultOverview)}
               />
             </Suspense>
           </FamilyTree3DBoundary>

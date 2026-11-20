@@ -191,6 +191,51 @@ body,
   color: #5eead4;
 }
 
+.s3d-record-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.25), rgba(245, 158, 11, 0.16));
+  color: #fde68a;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.s3d-record-btn:hover {
+  border-color: rgba(251, 191, 36, 0.8);
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.38), rgba(245, 158, 11, 0.25));
+  color: #fffbeb;
+}
+.s3d-record-btn.is-recording {
+  border-color: rgba(248, 113, 113, 0.75);
+  background: rgba(185, 28, 28, 0.35);
+  color: #fecaca;
+}
+.s3d-rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: s3dPulse 1s ease-in-out infinite;
+}
+@keyframes s3dPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}
+.s3d-helper-note {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #64748b;
+}
+
 .s3d-mini-add {
   display: inline-flex;
   align-items: center;

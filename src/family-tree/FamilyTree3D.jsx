@@ -1484,7 +1484,7 @@ export default function FamilyTree3D({
       if(dragged.current){event.preventDefault();event.stopPropagation();dragged.current=false;}
     }}>
     <Canvas dpr={[1,1.5]} frameloop="demand" style={{touchAction:'none'}}
-      shadows gl={{antialias:true,alpha:false,powerPreference:'default'}}
+      shadows gl={{antialias:true,alpha:false,powerPreference:'default',preserveDrawingBuffer:true}}
       onPointerMissed={()=>{if(!dragged.current){stopCinematic(false);setJourney(null);onDeselect?.();}}} fallback={<div className="dgft3d-unavailable">WebGL tidak tersedia. <button type="button" className="dg-ui-action" onClick={onBackTo2D}>Kembali ke 2D</button></div>}>
       <Suspense fallback={null}>
         <Scene people={people} layout={layout} appearance={appearance} thickness={thickness}
