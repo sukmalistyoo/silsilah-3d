@@ -6,6 +6,7 @@ export const nodeShapes = [
 ];
 export const chartDefault = {
   shape:'rounded', fill:'#ffffff', stroke:'#cbd5df', line_color:'#2563eb',
+  bg_color:'#081221', bg_image:'',
   cover:{enabled:false,title:'Silsilah Keluarga',subtitle:'Bagan keturunan',
     fill:'#17324a',text_color:'#ffffff',border_color:'#cbd5df',variant:'solid'},
 };
@@ -18,6 +19,8 @@ export const cleanAppearance = source => {
     fill:hexColor(input.fill)?input.fill:chartDefault.fill,
     stroke:hexColor(input.stroke)?input.stroke:chartDefault.stroke,
     line_color:hexColor(input.line_color)?input.line_color:chartDefault.line_color,
+    bg_color:hexColor(input.bg_color)?input.bg_color:chartDefault.bg_color,
+    bg_image:typeof input.bg_image==='string'&&(/^(data:image\/|https?:\/\/|\/)/i.test(input.bg_image))?input.bg_image:'',
     cover:{
       enabled:cover.enabled===true,
       title:typeof cover.title==='string'?cover.title.slice(0,120):chartDefault.cover.title,

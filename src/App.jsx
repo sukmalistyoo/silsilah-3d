@@ -293,6 +293,7 @@ export default function App() {
             positions={positions}
             selected={selected}
             onSelect={setSelected}
+            appearance={effectiveAppearance}
           />
         )}
       </main>

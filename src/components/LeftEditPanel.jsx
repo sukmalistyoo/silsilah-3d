@@ -222,21 +222,86 @@ export default function LeftEditPanel({
               <label>
                 <span>Bentuk Bingkai</span>
                 <select
-                  value={appearance.portraitShape || 'rounded'}
-                  onChange={(e) => onChangeAppearance({ ...appearance, portraitShape: e.target.value })}
+                  value={appearance.shape || 'rounded'}
+                  onChange={(e) => onChangeAppearance({ ...appearance, shape: e.target.value })}
                 >
                   <option value="rounded">Membulat</option>
-                  <option value="circle">Lingkaran</option>
-                  <option value="arch">Kubah</option>
+                  <option value="portrait">Foto Bulat</option>
+                  <option value="oval">Oval</option>
                   <option value="square">Kotak</option>
+                  <option value="pill">Kapsul</option>
+                  <option value="hexagon">Heksagon</option>
                 </select>
               </label>
+
+              <div className="s3d-bg-group">
+                <span className="s3d-mini-label">Warna Background</span>
+                <div className="s3d-swatches">
+                  {[
+                    { name: 'Midnight', hex: '#081221' },
+                    { name: 'Emerald', hex: '#061a19' },
+                    { name: 'Indigo', hex: '#111028' },
+                    { name: 'Obsidian', hex: '#0b0c10' },
+                    { name: 'Espresso', hex: '#18120e' },
+                  ].map((sw) => (
+                    <button
+                      key={sw.hex}
+                      type="button"
+                      title={sw.name}
+                      aria-label={`Background ${sw.name}`}
+                      className={`s3d-swatch ${(appearance.bg_color || '#081221').toLowerCase() === sw.hex && !appearance.bg_image ? 'is-active' : ''}`}
+                      style={{ background: sw.hex }}
+                      onClick={() => onChangeAppearance({ ...appearance, bg_color: sw.hex, bg_image: '' })}
+                    />
+                  ))}
+                  <input
+                    type="color"
+                    title="Pilih warna bebas"
+                    aria-label="Pilih warna background bebas"
+                    className="s3d-swatch-picker"
+                    value={appearance.bg_color || '#081221'}
+                    onChange={(e) => onChangeAppearance({ ...appearance, bg_color: e.target.value, bg_image: '' })}
+                  />
+                </div>
+              </div>
+
+              <div className="s3d-bg-group">
+                <span className="s3d-mini-label">Gambar Background</span>
+                <div className="s3d-bg-img-row">
+                  <label className="s3d-upload-pill">
+                    <span>{appearance.bg_image ? 'Ganti Gambar' : 'Upload Gambar'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="s3d-sr-only"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        e.target.value = '';
+                        if (!f) return;
+                        const reader = new FileReader();
+                        reader.onload = () => onChangeAppearance({ ...appearance, bg_image: String(reader.result || '') });
+                        reader.readAsDataURL(f);
+                      }}
+                    />
+                  </label>
+                  {appearance.bg_image && (
+                    <button
+                      type="button"
+                      className="s3d-clear-bg"
+                      onClick={() => onChangeAppearance({ ...appearance, bg_image: '' })}
+                    >
+                      Hapus
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <label>
                 <span>Warna Garis</span>
                 <input
                   type="color"
-                  value={appearance.lineColor || '#94a3b8'}
-                  onChange={(e) => onChangeAppearance({ ...appearance, lineColor: e.target.value })}
+                  value={appearance.line_color || '#2563eb'}
+                  onChange={(e) => onChangeAppearance({ ...appearance, line_color: e.target.value })}
                 />
               </label>
             </div>

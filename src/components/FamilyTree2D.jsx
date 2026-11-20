@@ -18,7 +18,7 @@ function initialsOf(name) {
     .join('');
 }
 
-export default function FamilyTree2D({ people = [], positions, selected, onSelect }) {
+export default function FamilyTree2D({ people = [], positions, selected, onSelect, appearance = {} }) {
   const containerRef = useRef(null);
   const [view, setView] = useState({ x: 0, y: 0, scale: 0.78 });
   const dragRef = useRef(null);
@@ -151,10 +151,22 @@ export default function FamilyTree2D({ people = [], positions, selected, onSelec
     dragRef.current = null;
   };
 
+  const bgStyle = appearance.bg_image
+    ? {
+        backgroundImage: `linear-gradient(rgba(7,13,25,0.52), rgba(7,13,25,0.62)), url("${appearance.bg_image}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: appearance.bg_color || '#081221',
+      }
+    : {
+        background: `radial-gradient(circle at 50% 25%, color-mix(in srgb, ${appearance.bg_color || '#081221'} 78%, #1e293b) 0%, ${appearance.bg_color || '#081221'} 75%)`,
+      };
+
   return (
     <div
       ref={containerRef}
       className="s3d-canvas-2d"
+      style={bgStyle}
       onWheel={onWheel}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

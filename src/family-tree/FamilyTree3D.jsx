@@ -1048,9 +1048,11 @@ function StudioEnvironment(){
 
 function Scene({people,layout,appearance,thickness,reset,nodeRefs,rotate,selected,all,focusId,frameBox,domElement,navigationRef,flow,traceRun,onTraceState,cinematic,onCinematicBeat,onCinematicEnd,spotlightIds,highlightedIds}) {
   const accent=useMemo(()=>new Color(appearance.line_color||'#74c9d8').lerp(new Color('#e0f6ff'),.42).getStyle(),[appearance.line_color]);
+  const bgColor=appearance.bg_color||'#081221';
+  const hasBgImage=Boolean(appearance.bg_image);
   return <>
-    <color attach="background" args={['#081221']}/>
-    <fog attach="fog" args={['#081221', 34, 135]}/>
+    {!hasBgImage&&<color attach="background" args={[bgColor]}/>}
+    {!hasBgImage&&<fog attach="fog" args={[bgColor, 34, 135]}/>}
     <ambientLight intensity={.48}/>
     <StudioEnvironment/>
     <hemisphereLight args={['#b7d5ff','#102136',1.15]}/>
@@ -1464,7 +1466,11 @@ export default function FamilyTree3D({
   const hasSelection=Boolean((selected&&ancestry.nodes.size>0)||relationResult);
   const canPlayAscent=Boolean(selectedPerson&&ancestry.nodes.size>1);
 
-  return <div ref={attachViewer} className={'dgft3d-viewer'+(cinematic||tourActive?' is-cinematic':'')} data-testid="family-tree-3d-viewer" data-trace-state={traceState} data-ancestor-count={Math.max(0,ancestry.nodes.size-1)} tabIndex={0} role="region" aria-label="Bagan silsilah 3D" onKeyDown={navigateKey}
+  const viewerBgStyle=appearance.bg_image
+    ? {backgroundImage:`linear-gradient(rgba(7,13,25,0.45), rgba(7,13,25,0.58)), url("${appearance.bg_image}")`,backgroundSize:'cover',backgroundPosition:'center',backgroundColor:appearance.bg_color||'#081221'}
+    : {backgroundColor:appearance.bg_color||'#081221'};
+
+  return <div ref={attachViewer} className={'dgft3d-viewer'+(cinematic||tourActive?' is-cinematic':'')} style={viewerBgStyle} data-testid="family-tree-3d-viewer" data-trace-state={traceState} data-ancestor-count={Math.max(0,ancestry.nodes.size-1)} tabIndex={0} role="region" aria-label="Bagan silsilah 3D" onKeyDown={navigateKey}
     onPointerDownCapture={event=>{
       if(activePointers.current.size===0)dragged.current=false;
       if(event.target.closest?.('.dgft3d-controls,.dgft3d-search,.dgft3d-space,.dgft3d-navigation,.dgft3d-actionbar,.dgft3d-cinema-hud,.dgft3d-journey,.dgft3d-rel-panel,.dgft3d-tour-pill')){event.stopPropagation();return;}
@@ -1484,7 +1490,7 @@ export default function FamilyTree3D({
       if(dragged.current){event.preventDefault();event.stopPropagation();dragged.current=false;}
     }}>
     <Canvas dpr={[1,1.5]} frameloop="demand" style={{touchAction:'none'}}
-      shadows gl={{antialias:true,alpha:false,powerPreference:'default',preserveDrawingBuffer:true}}
+      shadows gl={{antialias:true,alpha:true,powerPreference:'default',preserveDrawingBuffer:true}}
       onPointerMissed={()=>{if(!dragged.current){stopCinematic(false);setJourney(null);onDeselect?.();}}} fallback={<div className="dgft3d-unavailable">WebGL tidak tersedia. <button type="button" className="dg-ui-action" onClick={onBackTo2D}>Kembali ke 2D</button></div>}>
       <Suspense fallback={null}>
         <Scene people={people} layout={layout} appearance={appearance} thickness={thickness}
