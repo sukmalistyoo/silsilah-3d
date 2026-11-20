@@ -4,6 +4,7 @@ import {
   ChevronLeft,
   Download,
   Edit3,
+  FilePlus2,
   Film,
   Heart,
   Layers,
@@ -36,6 +37,7 @@ export default function LeftEditPanel({
   onChangeAppearance,
   onExportJson,
   onImportJson,
+  onNewTree,
   onResetDemo,
   onCollapse,
   recording,
@@ -361,7 +363,11 @@ export default function LeftEditPanel({
           <Download size={13} />
           <span>Export</span>
         </button>
-        <button type="button" className="s3d-foot-btn" onClick={onResetDemo} title="Reset demo">
+        <button type="button" className="s3d-foot-btn" onClick={onNewTree} title="Mulai trah kosong baru">
+          <FilePlus2 size={13} />
+          <span>Trah Baru</span>
+        </button>
+        <button type="button" className="s3d-foot-btn" onClick={onResetDemo} title="Reset ke data demo">
           <RotateCcw size={13} />
           <span>Reset</span>
         </button>

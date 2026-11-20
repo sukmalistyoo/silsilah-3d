@@ -213,6 +213,17 @@ export default function App() {
     }
   };
 
+  const handleNewTree = () => {
+    if (people.length > 0 && !window.confirm('Mulai trah baru dari kosong? Pastikan data saat ini sudah di-Export jika masih diperlukan.')) {
+      return;
+    }
+    setTreeTitle('Silsilah Keluarga Baru');
+    setPeople([]);
+    setSelected(null);
+    setCameraReset((v) => v + 1);
+    setModal({ open: true, mode: 'add', relation: null });
+  };
+
   const handleResetDemo = () => {
     localStorage.removeItem(STORAGE_KEY);
     setTreeTitle(DEMO_TRAH_DATA.title);
@@ -250,6 +261,7 @@ export default function App() {
           onChangeAppearance={setAppearance}
           onExportJson={handleExportJson}
           onImportJson={handleImportJson}
+          onNewTree={handleNewTree}
           onResetDemo={handleResetDemo}
           onCollapse={() => setSidebarOpen(false)}
           recording={recording}
@@ -271,7 +283,21 @@ export default function App() {
           </button>
         )}
 
-        {viewMode === '3d' ? (
+        {people.length === 0 ? (
+          <div className="s3d-empty-canvas">
+            <div className="s3d-empty-canvas-card">
+              <h2>Bagan Silsilah Masih Kosong</h2>
+              <p>Tambahkan leluhur pertama untuk mulai menyusun trah keluarga Anda.</p>
+              <button
+                type="button"
+                className="s3d-btn-primary"
+                onClick={() => setModal({ open: true, mode: 'add', relation: null })}
+              >
+                + Tambah Leluhur Pertama
+              </button>
+            </div>
+          </div>
+        ) : viewMode === '3d' ? (
           <FamilyTree3DBoundary>
             <Suspense fallback={<div className="s3d-loading">Memuat ruang 3D…</div>}>
               <FamilyTree3D
