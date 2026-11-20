@@ -1,6 +1,7 @@
 # Silsilah 3D — Interactive 3D & 2D Family Tree
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Buka%20Silsilah%203D-0d9488?style=for-the-badge&logo=githubpages&logoColor=white)](https://sukmalistyoo.github.io/silsilah-3d/)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-334155?style=for-the-badge)](./LICENSE)
 
 > **Live Demo:** https://sukmalistyoo.github.io/silsilah-3d/
 
@@ -43,3 +44,12 @@ Repo ini sudah menyertakan workflow `.github/workflows/deploy.yml`:
    ```
 3. Buka **Settings → Pages → Source: GitHub Actions**.
 4. Dalam ~1 menit, demo langsung aktif di `https://<username>.github.io/silsilah-3d/`.
+
+## Lisensi & Ketentuan Penggunaan
+
+Proyek ini dilisensikan di bawah **[GNU Affero General Public License v3.0 (AGPL-3.0)](./LICENSE)** — Copyright © 2026 **sukmalistyoo**.
+
+- **Bebas digunakan** untuk keperluan belajar, pribadi, keluarga, komunitas, maupun instansi desa.
+- **Wajib mencantumkan atribusi** (kredit pencipta asli dan tautan ke repository ini).
+- **Wajib tetap terbuka (*Copyleft*):** Jika kode ini dimodifikasi dan dijalankan/ditayangkan ulang sebagai layanan web publik, kode sumber turunannya wajib ikut dibagikan di bawah lisensi **AGPL-3.0** yang sama (tidak boleh diklaim atau dijual ulang sebagai aplikasi tertutup/*closed-source* tanpa izin tertulis).
+- Untuk lisensi komersial tertutup (*closed-source*), silakan hubungi pemilik repository melalui GitHub.
