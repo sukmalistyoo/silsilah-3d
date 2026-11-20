@@ -1052,7 +1052,7 @@ function Scene({people,layout,appearance,thickness,reset,nodeRefs,rotate,selecte
   const bgColor=appearance.bg_color||'#081221';
   const floorColor=useMemo(()=>new Color(bgColor).lerp(new Color('#1e293b'),.22).getStyle(),[bgColor]);
   const hasBgImage=Boolean(appearance.bg_image);
-  useEffect(()=>{invalidate();},[appearance.shape,appearance.line_color,appearance.bg_color,appearance.bg_image,invalidate]);
+  useEffect(()=>{invalidate();},[appearance.shape,appearance.stroke,appearance.line_color,appearance.bg_color,appearance.bg_image,invalidate]);
   return <>
     {!hasBgImage&&<color attach="background" args={[bgColor]}/>}
     {!hasBgImage&&<fog attach="fog" args={[bgColor, 34, 135]}/>}

@@ -142,9 +142,10 @@ export default function PortraitMount({person,point,selected,accent,appearance,t
   const geometry=useMemo(()=>makePortraitGeometry(shape,thickness),[shape,thickness]);
   useEffect(()=>()=>Object.values(geometry).forEach(g=>g.dispose()),[geometry]);
   const tier=person.data?.tier||'';
-  const ring=tier==='rasul'?'#fff3b0':tier==='nabi'?(selected?'#a7f3d0':'#34d399'):selected?'#ffd98a':traced?'#e8bf74':'#6e94ba';
-  const rimEmissive=tier==='rasul'?'#ffcf40':tier==='nabi'?'#10b981':selected?'#e0a642':traced?'#9b6e24':'#1d3550';
-  const rimIntensity=tier==='rasul'?(selected?1.45:1.18):tier==='nabi'?(selected?.98:.76):selected?.58:traced?.34:.15;
+  const customRing=person.style?.stroke||appearance?.stroke||'#6e94ba';
+  const ring=tier==='rasul'?'#fff3b0':tier==='nabi'?(selected?'#a7f3d0':'#34d399'):selected?'#ffd98a':traced?'#e8bf74':customRing;
+  const rimEmissive=tier==='rasul'?'#ffcf40':tier==='nabi'?'#10b981':selected?'#e0a642':traced?'#9b6e24':customRing;
+  const rimIntensity=tier==='rasul'?(selected?1.45:1.18):tier==='nabi'?(selected?.98:.76):selected?.58:traced?.34:.26;
   const accentBar=tier==='rasul'?'#ffe066':tier==='nabi'?'#34d399':selected?'#ffd98a':traced?'#f5cf8e':accent;
   return <group position={point}>
     {/* Slim architectural floating plinth */}

@@ -5,7 +5,7 @@ export const nodeShapes = [
   ['oval','Oval'],['diamond','Berlian'],['hexagon','Heksagon'],['portrait','Foto bulat + nama'],
 ];
 export const chartDefault = {
-  shape:'rounded', fill:'#ffffff', stroke:'#cbd5df', line_color:'#2563eb',
+  shape:'rounded', fill:'#ffffff', stroke:'#6e94ba', line_color:'#2563eb',
   bg_color:'#081221', bg_image:'',
   cover:{enabled:false,title:'Silsilah Keluarga',subtitle:'Bagan keturunan',
     fill:'#17324a',text_color:'#ffffff',border_color:'#cbd5df',variant:'solid'},

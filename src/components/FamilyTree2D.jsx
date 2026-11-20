@@ -222,6 +222,7 @@ export default function FamilyTree2D({ people = [], positions, selected, onSelec
                 top: pt.y - CARD_H / 2,
                 width: CARD_W,
                 height: CARD_H,
+                ...(!isSelected && !isHighlighted && !tier && appearance.stroke ? { borderColor: appearance.stroke } : {}),
               }}
               className={`s3d-2d-card ${isSelected ? 'is-selected' : ''} ${isHighlighted ? 'is-ancestor' : ''} ${tier ? `tier-${tier}` : ''}`}
             >

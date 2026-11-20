@@ -235,6 +235,37 @@ export default function LeftEditPanel({
               </label>
 
               <div className="s3d-bg-group">
+                <span className="s3d-mini-label">Warna Bingkai</span>
+                <div className="s3d-swatches">
+                  {[
+                    { name: 'Steel Blue', hex: '#6e94ba' },
+                    { name: 'Gold', hex: '#e6b85c' },
+                    { name: 'Emerald', hex: '#34d399' },
+                    { name: 'Rose', hex: '#f472b6' },
+                    { name: 'Silver', hex: '#cbd5e1' },
+                  ].map((sw) => (
+                    <button
+                      key={sw.hex}
+                      type="button"
+                      title={sw.name}
+                      aria-label={`Bingkai ${sw.name}`}
+                      className={`s3d-swatch ${(appearance.stroke || '#6e94ba').toLowerCase() === sw.hex ? 'is-active' : ''}`}
+                      style={{ background: sw.hex }}
+                      onClick={() => onChangeAppearance({ ...appearance, stroke: sw.hex })}
+                    />
+                  ))}
+                  <input
+                    type="color"
+                    title="Pilih warna bingkai bebas"
+                    aria-label="Pilih warna bingkai bebas"
+                    className="s3d-swatch-picker"
+                    value={appearance.stroke || '#6e94ba'}
+                    onChange={(e) => onChangeAppearance({ ...appearance, stroke: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="s3d-bg-group">
                 <span className="s3d-mini-label">Warna Background</span>
                 <div className="s3d-swatches">
                   {[
