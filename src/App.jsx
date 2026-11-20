@@ -72,6 +72,16 @@ export default function App() {
 
   useEffect(() => () => stopRecorderRef.current?.(), []);
 
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape' && !modal.open) {
+        setSelected(null);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [modal.open]);
+
   const peopleById = useMemo(() => new Map(people.map((p) => [p.id, p])), [people]);
   const selectedPerson = selected ? peopleById.get(selected) || null : null;
   const positions = useMemo(() => familyPositions(people, 'portrait', 1), [people]);
@@ -270,6 +280,7 @@ export default function App() {
                 generationPositions={positions}
                 selected={selected}
                 onSelect={setSelected}
+                onDeselect={() => setSelected(null)}
                 appearance={effectiveAppearance}
                 reset={cameraReset}
                 initialOverview={Boolean(DEMO_TRAH_DATA.defaultOverview)}

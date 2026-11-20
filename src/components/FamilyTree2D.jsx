@@ -129,19 +129,25 @@ export default function FamilyTree2D({ people = [], positions, selected, onSelec
   };
 
   const onPointerDown = (e) => {
-    if (e.target.closest('button[data-node]')) return;
+    if (e.target.closest('button[data-node], .s3d-2d-toolbar')) return;
     e.currentTarget.setPointerCapture?.(e.pointerId);
-    dragRef.current = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
+    dragRef.current = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, moved: false };
   };
   const onPointerMove = (e) => {
     if (!dragRef.current) return;
+    const dx = e.clientX - dragRef.current.x;
+    const dy = e.clientY - dragRef.current.y;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) dragRef.current.moved = true;
     setView((prev) => ({
       ...prev,
-      x: dragRef.current.vx + (e.clientX - dragRef.current.x),
-      y: dragRef.current.vy + (e.clientY - dragRef.current.y),
+      x: dragRef.current.vx + dx,
+      y: dragRef.current.vy + dy,
     }));
   };
   const onPointerUp = () => {
+    if (dragRef.current && !dragRef.current.moved) {
+      onSelect(null);
+    }
     dragRef.current = null;
   };
 
