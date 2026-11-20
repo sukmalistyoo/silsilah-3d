@@ -333,7 +333,7 @@ export function pickTourDescendants(people,layoutCoords){
 /**
  * Render and download an elegant heritage PNG poster of the completed lineage journey.
  */
-export function exportLineagePosterPng({steps,title='Silsilah Sunan Gripit',subtitle='Perpustakaan Digital · Pemerintah Desa Gripit'}){
+export function exportLineagePosterPng({steps,title='Silsilah Keluarga',subtitle='Silsilah 3D · Visualisasi Interaktif'}){
   if(!steps?.length)return;
   // Ordered top-to-bottom: Gen 1 (Leluhur) at top -> Gen N (Descendant) at bottom
   const ordered=[...steps].reverse();
@@ -472,12 +472,12 @@ export function exportLineagePosterPng({steps,title='Silsilah Sunan Gripit',subt
   ctx.fillStyle='#7f9ab6';
   ctx.font='500 17px system-ui, -apple-system, sans-serif';
   const dateStr=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
-  ctx.fillText(`DiGripit · ${ordered.length} Generasi · Diunduh ${dateStr}`,width/2,height-68);
+  ctx.fillText(`Silsilah 3D · ${ordered.length} Generasi · Diunduh ${dateStr}`,width/2,height-68);
 
-  const leafSlug=(ordered[ordered.length-1]?.names||'sunan-gripit')
-    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'sunan-gripit';
+  const leafSlug=(ordered[ordered.length-1]?.names||'silsilah-keluarga')
+    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'silsilah-keluarga';
   const link=document.createElement('a');
-  link.download=`Silsilah-Sunan-Gripit-${leafSlug}.png`;
+  link.download=`Silsilah-${leafSlug}.png`;
   link.href=canvas.toDataURL('image/png');
   link.click();
 }

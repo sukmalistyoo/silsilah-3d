@@ -6,7 +6,7 @@ export const nodeShapes = [
 ];
 export const chartDefault = {
   shape:'rounded', fill:'#ffffff', stroke:'#cbd5df', line_color:'#2563eb',
-  cover:{enabled:false,title:'Silsilah Sunan Gripit',subtitle:'Bagan keturunan',
+  cover:{enabled:false,title:'Silsilah Keluarga',subtitle:'Bagan keturunan',
     fill:'#17324a',text_color:'#ffffff',border_color:'#cbd5df',variant:'solid'},
 };
 export const hexColor = value=>typeof value==='string'&&/^#[a-f0-9]{6}$/i.test(value);

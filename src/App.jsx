@@ -31,6 +31,7 @@ function loadInitialState() {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed.people) && parsed.people.length) {
         return {
+          title: parsed.title || DEMO_TRAH_DATA.title,
           people: parsed.people.map(cleanPerson),
           appearance: cleanAppearance(parsed.appearance || DEMO_TRAH_DATA.appearance || {}),
         };
@@ -40,14 +41,17 @@ function loadInitialState() {
     // Fallback to default demo data
   }
   return {
+    title: DEMO_TRAH_DATA.title,
     people: (DEMO_TRAH_DATA.people || []).map(cleanPerson),
     appearance: cleanAppearance(DEMO_TRAH_DATA.appearance || {}),
   };
 }
 
 export default function App() {
-  const [people, setPeople] = useState(() => loadInitialState().people);
-  const [appearance, setAppearance] = useState(() => loadInitialState().appearance);
+  const initialState = useMemo(() => loadInitialState(), []);
+  const [treeTitle, setTreeTitle] = useState(initialState.title);
+  const [people, setPeople] = useState(initialState.people);
+  const [appearance, setAppearance] = useState(initialState.appearance);
   const [viewMode, setViewMode] = useState('3d');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selected, setSelected] = useState(null);
@@ -60,11 +64,11 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ people, appearance }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ title: treeTitle, people, appearance }));
     } catch {
       // Ignore storage quota errors
     }
-  }, [people, appearance]);
+  }, [treeTitle, people, appearance]);
 
   useEffect(() => () => stopRecorderRef.current?.(), []);
 
@@ -94,7 +98,7 @@ export default function App() {
       setRecordingSec(10);
       stopRecorderRef.current = startCinematicBannerRecording({
         sourceCanvas: canvas,
-        title: DEMO_TRAH_DATA.title,
+        title: treeTitle || DEMO_TRAH_DATA.title,
         subtitle: 'SILSILAH 3D · BANNER CINEMATIK',
         durationMs: 10000,
         onTick: (sec) => setRecordingSec(sec),
@@ -172,7 +176,7 @@ export default function App() {
 
   const handleExportJson = () => {
     const blob = new Blob(
-      [JSON.stringify({ title: DEMO_TRAH_DATA.title, appearance, people }, null, 2)],
+      [JSON.stringify({ title: treeTitle, appearance, people }, null, 2)],
       { type: 'application/json' },
     );
     const url = URL.createObjectURL(blob);
@@ -189,6 +193,7 @@ export default function App() {
       const parsed = JSON.parse(text);
       const list = Array.isArray(parsed) ? parsed : parsed?.people;
       if (!Array.isArray(list) || !list.length) return;
+      if (parsed?.title) setTreeTitle(String(parsed.title));
       setPeople(list.map(cleanPerson));
       if (parsed?.appearance) setAppearance(cleanAppearance(parsed.appearance));
       setSelected(null);
@@ -200,11 +205,20 @@ export default function App() {
 
   const handleResetDemo = () => {
     localStorage.removeItem(STORAGE_KEY);
+    setTreeTitle(DEMO_TRAH_DATA.title);
     setPeople((DEMO_TRAH_DATA.people || []).map(cleanPerson));
     setAppearance(cleanAppearance(DEMO_TRAH_DATA.appearance || {}));
     setSelected(null);
     setCameraReset((v) => v + 1);
   };
+
+  const effectiveAppearance = useMemo(
+    () => ({
+      ...appearance,
+      cover: { ...(appearance.cover || {}), title: treeTitle || DEMO_TRAH_DATA.title },
+    }),
+    [appearance, treeTitle],
+  );
 
   const relationLabelMap = { child: 'Anak', spouse: 'Pasangan', parent: 'Orang Tua' };
 
@@ -212,7 +226,8 @@ export default function App() {
     <div className={`s3d-workspace ${sidebarOpen ? 'is-sidebar-open' : 'is-sidebar-closed'}`}>
       {sidebarOpen && (
         <LeftEditPanel
-          treeTitle={DEMO_TRAH_DATA.title}
+          treeTitle={treeTitle}
+          onChangeTreeTitle={setTreeTitle}
           viewMode={viewMode}
           onChangeViewMode={setViewMode}
           peopleCount={people.length}
@@ -233,7 +248,7 @@ export default function App() {
         />
       )}
 
-      <main ref={stageRef} className="s3d-stage" aria-label="Kanvas Silsilah">
+      <main ref={stageRef} className="s3d-stage dgft" aria-label="Kanvas Silsilah">
         {!sidebarOpen && (
           <button
             type="button"
@@ -255,7 +270,7 @@ export default function App() {
                 generationPositions={positions}
                 selected={selected}
                 onSelect={setSelected}
-                appearance={appearance}
+                appearance={effectiveAppearance}
                 reset={cameraReset}
                 initialOverview={Boolean(DEMO_TRAH_DATA.defaultOverview)}
               />

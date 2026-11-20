@@ -22,6 +22,8 @@ function displayName(p) {
 }
 
 export default function LeftEditPanel({
+  treeTitle,
+  onChangeTreeTitle,
   viewMode,
   onChangeViewMode,
   peopleCount,
@@ -67,6 +69,21 @@ export default function LeftEditPanel({
       </div>
 
       <div className="s3d-sidebar-scroll">
+        {/* Editable Nama Silsilah */}
+        <section className="s3d-section">
+          <label className="s3d-title-field">
+            <span className="s3d-section-label">Nama Silsilah</span>
+            <input
+              type="text"
+              className="s3d-title-input"
+              value={treeTitle}
+              onChange={(e) => onChangeTreeTitle(e.target.value)}
+              placeholder="Nama silsilah..."
+              maxLength={80}
+            />
+          </label>
+        </section>
+
         {/* Mode Switcher 3D / 2D */}
         <section className="s3d-section">
           <div className="s3d-segmented" role="tablist" aria-label="Pilih mode tampilan">

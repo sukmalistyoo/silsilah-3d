@@ -1209,14 +1209,14 @@ export default function FamilyTree3D({
   const sharePerson=useCallback(async(personId)=>{
     if(!personId||typeof window==='undefined')return;
     const person=peopleById.get(personId);
-    const name=person?displayName(person):'Silsilah Sunan Gripit';
+    const name=person?displayName(person):'Silsilah Keluarga';
     const url=new URL(window.location.href);
     url.searchParams.set('tokoh',personId);
     url.searchParams.set('play','1');
     const shareUrl=url.toString();
     try{
       if(navigator.share&&window.matchMedia?.('(pointer: coarse)').matches){
-        await navigator.share({title:`Silsilah ${name} — Sunan Gripit`,text:`Lihat jalur nasab ${name} ke Sunan Gripit:`,url:shareUrl});
+        await navigator.share({title:`Silsilah ${name}`,text:`Lihat jalur nasab ${name}:`,url:shareUrl});
         return;
       }
       if(navigator.clipboard?.writeText){
