@@ -1,5 +1,9 @@
 # Silsilah 3D — Interactive 3D & 2D Family Tree
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Buka%20Silsilah%203D-0d9488?style=for-the-badge&logo=githubpages&logoColor=white)](https://sukmalistyoo.github.io/silsilah-3d/)
+
+> **Live Demo:** https://sukmalistyoo.github.io/silsilah-3d/
+
 Aplikasi web interaktif untuk memvisualisasikan dan menyunting bagan silsilah keluarga dalam mode **3D (Three.js / React Three Fiber)** dan **2D**, lengkap dengan panel editor di sisi kiri dan kanvas penuh yang bersih di sisi kanan.
 
 ## Fitur Utama
