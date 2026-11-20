@@ -1047,9 +1047,12 @@ function StudioEnvironment(){
 }
 
 function Scene({people,layout,appearance,thickness,reset,nodeRefs,rotate,selected,all,focusId,frameBox,domElement,navigationRef,flow,traceRun,onTraceState,cinematic,onCinematicBeat,onCinematicEnd,spotlightIds,highlightedIds}) {
-  const accent=useMemo(()=>new Color(appearance.line_color||'#74c9d8').lerp(new Color('#e0f6ff'),.42).getStyle(),[appearance.line_color]);
+  const invalidate=useThree(s=>s.invalidate);
+  const accent=useMemo(()=>new Color(appearance.line_color||'#74c9d8').lerp(new Color('#ffffff'),.18).getStyle(),[appearance.line_color]);
   const bgColor=appearance.bg_color||'#081221';
+  const floorColor=useMemo(()=>new Color(bgColor).lerp(new Color('#1e293b'),.22).getStyle(),[bgColor]);
   const hasBgImage=Boolean(appearance.bg_image);
+  useEffect(()=>{invalidate();},[appearance.shape,appearance.line_color,appearance.bg_color,appearance.bg_image,invalidate]);
   return <>
     {!hasBgImage&&<color attach="background" args={[bgColor]}/>}
     {!hasBgImage&&<fog attach="fog" args={[bgColor, 34, 135]}/>}
@@ -1062,10 +1065,10 @@ function Scene({people,layout,appearance,thickness,reset,nodeRefs,rotate,selecte
     <pointLight position={[5,3,7]} intensity={2.3} color={accent} decay={2} distance={38}/>
     <pointLight position={[-4,-4,1]} intensity={1.1} color="#8c9fe5" decay={2} distance={30}/>
     <AmbientDust3D layout={layout}/>
-    <mesh position={[layout.centerX,layout.minY-1.1,0]} rotation={[-Math.PI/2,0,0]} receiveShadow>
+    {!hasBgImage&&<mesh position={[layout.centerX,layout.minY-1.1,0]} rotation={[-Math.PI/2,0,0]} receiveShadow>
       <planeGeometry args={[Math.max(80,layout.width*2),80]}/>
-      <meshStandardMaterial color="#0c192a" metalness={.18} roughness={.72}/>
-    </mesh>
+      <meshStandardMaterial color={floorColor} metalness={.18} roughness={.72}/>
+    </mesh>}
     <PerspectiveCamera makeDefault fov={39} near={.1} far={5000}/>
     <CameraRig layout={layout} reset={reset} rotate={rotate} all={all} focusId={focusId} frameBox={frameBox} domElement={domElement} navigationRef={navigationRef} nodeRefs={nodeRefs} cinematic={cinematic} onCinematicBeat={onCinematicBeat} onCinematicEnd={onCinematicEnd}/>
     {layout.lines.map(line=><FamilyLink key={line.key} line={line} accent={accent}/>)}

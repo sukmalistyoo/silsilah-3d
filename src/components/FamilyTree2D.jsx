@@ -183,8 +183,9 @@ export default function FamilyTree2D({ people = [], positions, selected, onSelec
               key={line.key}
               d={line.d}
               fill="none"
-              stroke={line.active ? '#f5c542' : 'rgba(148, 163, 184, 0.34)'}
-              strokeWidth={line.active ? 2.6 : 1.5}
+              stroke={line.active ? '#f5c542' : (appearance.line_color || 'rgba(148, 163, 184, 0.45)')}
+              strokeOpacity={line.active ? 1 : 0.65}
+              strokeWidth={line.active ? 2.6 : 1.6}
               strokeLinejoin="round"
             />
           ))}
